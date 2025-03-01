@@ -1,14 +1,21 @@
 import re
 import time
-import urllib2
+import urllib.request
+import config
 
-url = "http://lenta.ru/"
-content = urllib2.urlopen(url).read()
-imgUrls = re.findall('img .*?src="(.*?)"', сontent)
 
-start = time.time()
-for img in imgUrls:
-    if img.endswith(".jpg"):
-        """реализация метода по загрузке изображения из url"""
+def main():
+    response = urllib.request.urlopen(config.URL)
+    html = response.read()
+    img_urls = re.findall('img .*?src="(.*?)"', str(html))
+    index = 0
+    for img in img_urls:
+        if img.endswith(".jpg") and img.startswith("https"):
+            file_path = f"photos/{index}.jpg"
+            index +=1
+            urllib.request.urlretrieve(img, file_path)
+    print(img_urls)
 
-# print time.time()-start
+
+if __name__ == "__main__":
+    main()
